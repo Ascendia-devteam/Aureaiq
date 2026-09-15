@@ -214,21 +214,44 @@ mount ──► MotionProvider picks a tier from device capability
 The build is plain static files, so **nothing runs Node on the server**.
 `npm run build` produces `dist/`, and `dist/` is the whole site.
 
+Every push to `main` builds and uploads automatically
+(`.github/workflows/deploy.yml`). `scripts/deploy.sh` is the manual
+fallback for when you need to push a fix without a commit.
+
 ### One-time setup
 
-**1. Add your SSH key to Hostinger.** In hPanel → Advanced → SSH Access →
-Manage SSH keys, paste the contents of `~/.ssh/id_ed25519.pub`. Without
-this, every deploy asks for the account password.
-
-Check it worked:
+**1. Generate a deploy key.** Use a key dedicated to this, not your
+personal one — the private half goes into GitHub's secret store.
 
 ```bash
-ssh -p <port> <user>@<host> 'echo ok'
+ssh-keygen -t ed25519 -f ~/.ssh/aurea_deploy -N "" -C "github-actions-deploy@aurea"
 ```
 
-**2. Find the document root.** hPanel shows a directory, but on Hostinger
-the web server usually serves a `public_html` *inside* it. Confirm before
-the first deploy:
+**2. Give the public half to Hostinger.** hPanel → Advanced → SSH Access
+→ Manage SSH keys, paste:
+
+```bash
+pbcopy < ~/.ssh/aurea_deploy.pub
+```
+
+**3. Give the private half to GitHub.** Repository → Settings → Secrets
+and variables → Actions → New repository secret. Five secrets:
+
+| Secret | Value |
+| --- | --- |
+| `SSH_PRIVATE_KEY` | the whole of `~/.ssh/aurea_deploy`, `BEGIN`/`END` lines included |
+| `SSH_HOST` | server IP |
+| `SSH_PORT` | SSH port |
+| `SSH_USER` | hosting account user |
+| `DEPLOY_PATH` | document root, **with a trailing slash** |
+
+```bash
+pbcopy < ~/.ssh/aurea_deploy        # for SSH_PRIVATE_KEY
+```
+
+**4. Confirm the document root.** hPanel shows a directory, but the web
+server usually serves a `public_html` *inside* it. Getting this wrong
+uploads the site somewhere nobody can reach it:
 
 ```bash
 ssh -p <port> <user>@<host> 'ls -la <the directory hPanel showed you>'
@@ -238,29 +261,33 @@ If you see `public_html`, that is the document root. If you see
 `index.html` or `.htaccess` sitting directly there, the directory itself
 is the root.
 
-**3. Fill in the connection details.**
+### After that
+
+Push to `main`. The Actions tab shows the run; it typechecks, builds and
+uploads. A type error fails the deploy instead of shipping.
+
+You can also re-run a deploy without a commit: Actions → Deploy to
+Hostinger → Run workflow.
+
+### Manual deploys
 
 ```bash
 cp .env.deploy.example .env.deploy   # then edit it
-```
-
-`.env.deploy` is gitignored — server addresses stay out of the repo.
-
-### Deploying
-
-```bash
 npm run deploy
 ```
 
-It builds, shows a dry run of exactly what would change on the server,
-and waits for confirmation before touching anything. `npm run deploy --
---yes` skips the prompt.
+Builds, shows a dry run of exactly what would change on the server, and
+waits for confirmation. `.env.deploy` is gitignored, so server addresses
+stay out of the repo.
 
-The upload uses `rsync --delete`, so the server ends up an exact mirror
-of `dist/` — stale fingerprinted assets from old builds are cleaned up
+### Why `--delete`
+
+Both paths mirror `dist/` with `rsync --delete`, so the server ends up an
+exact copy and stale fingerprinted assets from old builds are cleaned up
 rather than accumulating forever. That also means **`DEPLOY_PATH` must be
-the document root and nothing else**; the script refuses paths that
-obviously are not one, but it cannot check what it cannot see.
+the document root and nothing else**. The manual script refuses paths
+that obviously are not one; the workflow trusts the secret, because it
+cannot prompt.
 
 ### What ships with the build
 

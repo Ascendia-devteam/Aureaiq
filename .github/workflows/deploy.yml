@@ -1,0 +1,84 @@
+# ============================================================
+# Builds the site and mirrors it onto the Hostinger webroot on every
+# push to main.
+#
+# Required repository secrets (Settings -> Secrets and variables ->
+# Actions):
+#   SSH_PRIVATE_KEY  the deploy key's PRIVATE half, whole file
+#   SSH_HOST         server IP
+#   SSH_PORT         SSH port
+#   SSH_USER         hosting account user
+#   DEPLOY_PATH      document root, with a trailing slash
+#
+# The matching PUBLIC half must be added in hPanel under
+# Advanced -> SSH Access -> Manage SSH keys, or every run fails to
+# authenticate.
+# ============================================================
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [main]
+  # Lets you re-run a deploy from the Actions tab without a new commit.
+  workflow_dispatch:
+
+# One deploy at a time. Two overlapping rsyncs onto the same webroot
+# would fight over the same files; queueing is the whole point.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and upload
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` installs exactly what package-lock.json pins, so CI
+      # cannot quietly build against a different dependency tree.
+      - name: Install dependencies
+        run: npm ci
+
+      # `npm run build` is `tsc -b && vite build`, so a type error fails
+      # the deploy instead of shipping.
+      - name: Build
+        run: npm run build
+
+      - name: Authorise the deploy key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Pin the host key so the upload cannot be silently redirected.
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      # --delete makes the server an exact mirror of dist/, so old
+      # fingerprinted assets are removed rather than piling up. It also
+      # means DEPLOY_PATH must be the document root and nothing else.
+      - name: Upload
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          rsync -az --delete --human-readable --stats \
+            -e "ssh -i ~/.ssh/deploy_key -p $SSH_PORT" \
+            dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH"
+
+      - name: Summary
+        run: echo "Deployed ${GITHUB_SHA::7} to the Hostinger webroot." >> "$GITHUB_STEP_SUMMARY"

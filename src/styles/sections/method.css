@@ -1,0 +1,63 @@
+/* ============================================================
+   Method — a real sequence, the one place numbers earn their keep
+   ============================================================ */
+.method {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.step {
+  padding: 30px 28px 0 0;
+  position: relative;
+}
+
+.step__rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 28px;
+  height: 1px;
+  background: var(--rule-on-paper);
+  transform-origin: left;
+}
+
+.step__n {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 1.15rem;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 14px;
+}
+
+.step h3 {
+  font-size: 1.08rem;
+  margin-bottom: 10px;
+}
+
+.step p {
+  color: var(--stone);
+  font-size: 0.94rem;
+}
+
+@media (max-width: 900px) {
+  .method {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .method {
+    grid-template-columns: 1fr;
+  }
+
+  .step {
+    padding-right: 0;
+    padding-bottom: 26px;
+  }
+
+  .step__rule {
+    right: 0;
+  }
+}

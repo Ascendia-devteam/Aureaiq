@@ -1,0 +1,94 @@
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(72px, 9vw, 128px) clamp(56px, 7vw, 92px);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 820px) {
+  .hero__inner {
+    display: grid;
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) clamp(200px, 24vw, 300px);
+    column-gap: clamp(28px, 3vw, 48px);
+  }
+
+  .hero__copy {
+    grid-column: 1;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1180px) {
+  /* The column is sized so the copy never drops below the 701px the
+     headline needs, which keeps its line break intact. */
+  .hero__inner {
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 24vw, 320px);
+    column-gap: clamp(36px, 3.5vw, 56px);
+  }
+}
+
+.hero__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid rgb(150 115 31 / 0.32);
+  background: rgb(184 147 63 / 0.1);
+  color: var(--accent-text);
+  padding: 7px 16px 7px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  letter-spacing: 0.045em;
+  line-height: 1;
+  margin-bottom: 28px;
+}
+
+.hero__kicker::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex: none;
+  animation: breathe 3.4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+.hero h1 {
+  font-size: var(--step-display);
+  max-width: 15ch;
+  font-variation-settings: 'opsz' 144;
+  line-height: 1.01;
+}
+
+.hero .lede {
+  margin-top: 28px;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 24px;
+  align-items: center;
+  margin-top: 38px;
+}

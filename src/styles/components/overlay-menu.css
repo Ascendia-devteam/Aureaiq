@@ -1,0 +1,51 @@
+/* ============================================================
+   Overlay menu — full screen, Ink, oversized serif
+   ============================================================ */
+.overlay-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  padding: 0 var(--gutter);
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
+}
+
+.overlay-menu.is-open {
+  pointer-events: auto;
+}
+
+.overlay-menu a {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.1rem, 10vw, 3.4rem);
+  line-height: 1.18;
+  display: block;
+  overflow: hidden;
+}
+
+.overlay-menu__foot {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  justify-content: space-between;
+  font-size: var(--step-small);
+  color: var(--stone-on-ink);
+  border-top: 1px solid var(--rule-on-ink);
+  padding-top: 18px;
+}
+
+.overlay-menu__foot a {
+  font-family: var(--sans);
+  font-size: var(--step-small);
+  color: var(--gold);
+}

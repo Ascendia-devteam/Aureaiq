@@ -1,0 +1,36 @@
+/* ============================================================
+   Cursor — a thin gold ring, desktop pointers only
+   ============================================================ */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 150;
+  opacity: 0;
+  margin: -14px 0 0 -14px;
+}
+
+.cursor--dot {
+  width: 5px;
+  height: 5px;
+  background: var(--gold);
+  border: none;
+  margin: -2.5px 0 0 -2.5px;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}

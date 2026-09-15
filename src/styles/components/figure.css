@@ -1,0 +1,59 @@
+/* ============================================================
+   Figures — photography treated to a gold duotone so it reads as
+   Aurea's regardless of what image sits there. Swap the src for real
+   photography; the treatment stays.
+
+   Grayscale is done by the image CDN (&sat=-45), not by a CSS filter —
+   filtering a large bitmap on every composited frame is expensive. Only
+   the colour blend stays on the client.
+
+   One static shadow: transitioning box-shadow re-rasterises the blur on
+   every frame of the hover, which is exactly the kind of work a
+   throttled machine cannot spare. The hover life comes from the scale.
+   ============================================================ */
+.fig {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+  isolation: isolate;
+  box-shadow:
+    0 2px 6px rgb(21 20 15 / 0.09),
+    0 18px 34px -20px rgb(21 20 15 / 0.4);
+}
+
+.fig img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backface-visibility: hidden;
+}
+
+.fig::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--duotone);
+  mix-blend-mode: color;
+  opacity: var(--duotone-strength);
+  pointer-events: none;
+}
+
+.fig::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgb(21 20 15 / 0), rgb(21 20 15 / 0.14));
+  pointer-events: none;
+}
+
+.fig__caption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 22px 26px;
+  font-size: var(--step-small);
+  color: var(--paper);
+  letter-spacing: 0.03em;
+}

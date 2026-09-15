@@ -1,0 +1,137 @@
+/* ============================================================
+   The Dawn Mark — the hero's golden-section construction.
+
+   A Fibonacci square tiling and the spiral it generates. "Aurea" is the
+   sectio aurea, so the hero draws its own name.
+
+   Placement is measured rather than guessed. Floating the mark in the
+   hero's bottom-right corner collided with real text at almost every
+   width, so it never overlaps now: it takes a column of its own, and it
+   only appears at widths that can actually give it one.
+
+   Phones get no mark at all. The construction needs ~240px to stay
+   legible, which is two thirds of a 375px screen, and stacking it under
+   the buttons left it orphaned in dead space. A type-only hero is the
+   better mobile hero.
+   ============================================================ */
+.dawn {
+  display: none;
+}
+
+@media (min-width: 820px) {
+  /* iPad portrait and up: the mark sits beside the copy and
+     bottom-aligns with the button row, so the two read as one block. */
+  .dawn {
+    display: block;
+    grid-column: 2;
+    justify-self: end;
+    align-self: end;
+    margin: 0;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 624 / 391; /* matches the viewBox */
+    overflow: visible;
+    pointer-events: none;
+  }
+}
+
+@media (min-width: 1180px) {
+  .dawn {
+    align-self: center;
+    /* The shell's outer margin is dead space on wide screens, so the
+       mark reaches into it and gains back the size it lost to the
+       column. */
+    --bleed: clamp(0px, (100vw - var(--shell)) / 2 - var(--gutter), 110px);
+    width: calc(100% + var(--bleed));
+    margin-right: calc(-1 * var(--bleed));
+  }
+}
+
+/* The spiral carries the mark, so it gets real weight and a stroke that
+   deepens as it winds in — the eye of the construction is the point. */
+.dawn__arc {
+  fill: none;
+  stroke: url(#dawnStroke);
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.dawn__grid {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1;
+  opacity: 0.34;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The tint escalates toward the eye, so the tiling reads as convergence
+   rather than as a flat set of boxes. */
+.dawn__cells path {
+  fill: var(--gold);
+}
+
+.dawn__cells .t1 {
+  opacity: 0.05;
+}
+
+.dawn__cells .t2 {
+  opacity: 0.1;
+}
+
+.dawn__cells .t3 {
+  opacity: 0.18;
+}
+
+.dawn__halo {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dawn-pulse 4.2s ease-out infinite;
+}
+
+.dawn__eye {
+  fill: var(--accent-text);
+}
+
+@keyframes dawn-pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.55);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dawn__halo {
+    animation: none;
+    opacity: 0.45;
+  }
+}
+
+/* ============================================================
+   The Dawn Field — the repeated-arc pattern from the identity spec:
+   hairline stroke, low opacity, behind a pull-quote and never behind
+   body text.
+   ============================================================ */
+.dawn-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.dawn-field path {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 0.5;
+}

@@ -1,0 +1,90 @@
+/* ============================================================
+   Design tokens — the single source of truth for the brand.
+
+   Palette, type and usage ratio come from the Aurea Visual
+   Identity v1.0. Gold is a signal, never a fill:
+   Paper 50 / Ink 30 / Stone 12 / Gold 8.
+
+   Everything lives in `@theme`, so one declaration produces both
+   a CSS custom property and a Tailwind utility:
+     --color-ink  ->  var(--color-ink), bg-ink, text-ink, border-ink
+     --font-serif ->  var(--font-serif), font-serif
+
+   The `:root` block underneath adds short aliases (--ink, --gold)
+   used by the hand-written component CSS. Change a value once, in
+   @theme; the alias follows.
+   ============================================================ */
+@theme {
+  /* --- palette --- */
+  --color-ink: #15140f;
+  --color-paper: #faf7f0;
+  --color-gold: #b8933f;
+  --color-moss: #3a4a3f;
+  --color-stone: #79766b;
+
+  /* Brand gold sits at ~3:1 on Paper — fine for a hairline, too weak
+     for a word you want to carry emphasis. `accent` is a deeper cut of
+     the same hue for type on light ground; on Ink the brand gold
+     already has the contrast it needs. */
+  --color-accent: #96731f;
+
+  /* --- rules and muted type --- */
+  --color-rule-on-paper: rgb(21 20 15 / 0.13);
+  --color-rule-on-ink: rgb(250 247 240 / 0.15);
+  --color-stone-on-ink: rgb(250 247 240 / 0.6);
+
+  /* --- type --- */
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-sans: 'Work Sans', system-ui, sans-serif;
+
+  --text-display: clamp(2.6rem, 6.4vw, 4.9rem);
+  --text-h2: clamp(1.85rem, 3.1vw, 2.55rem);
+  --text-h3: 1.22rem;
+  --text-body: 1.0625rem;
+  --text-small: 0.8125rem;
+
+  /* --- motion --- */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+:root {
+  /* --- layout --- */
+  --shell: 1180px;
+  --gutter: 40px;
+  --masthead-h: 66px;
+
+  /* --- short aliases for the component CSS --- */
+  --ink: var(--color-ink);
+  --paper: var(--color-paper);
+  --gold: var(--color-gold);
+  --moss: var(--color-moss);
+  --stone: var(--color-stone);
+  --accent-text: var(--color-accent);
+
+  --rule-on-paper: var(--color-rule-on-paper);
+  --rule-on-ink: var(--color-rule-on-ink);
+  --stone-on-ink: var(--color-stone-on-ink);
+
+  --serif: var(--font-serif);
+  --sans: var(--font-sans);
+
+  --step-display: var(--text-display);
+  --step-h2: var(--text-h2);
+  --step-h3: var(--text-h3);
+  --step-body: var(--text-body);
+  --step-small: var(--text-small);
+
+  --ease-out: var(--ease-out-soft);
+
+  /* Photography. Saturation is applied by the image CDN, not by a CSS
+     filter. -45 keeps some life in the image; -100 is full grey. */
+  --duotone: var(--color-moss);
+  --duotone-strength: 0.2;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --gutter: 22px;
+  }
+}

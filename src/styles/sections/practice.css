@@ -1,0 +1,143 @@
+/* ============================================================
+   Practice — three disciplines held in one stack.
+   Deliberately unnumbered: the brand sells them as one thing.
+   ============================================================ */
+.practice {
+  border-top: 1px solid var(--rule-on-paper);
+}
+
+.discipline {
+  border-bottom: 1px solid var(--rule-on-paper);
+}
+
+.discipline__head {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  text-align: left;
+  padding: 30px 0;
+}
+
+.discipline__name {
+  font-family: var(--serif);
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  letter-spacing: -0.02em;
+  display: block;
+}
+
+.discipline__claim {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.94rem;
+  color: var(--stone);
+  margin-top: 7px;
+  max-width: 46ch;
+  letter-spacing: 0;
+}
+
+.discipline__sign {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  position: relative;
+  transition: transform 0.38s var(--ease-out);
+}
+
+.discipline__sign::before,
+.discipline__sign::after {
+  content: '';
+  position: absolute;
+  background: var(--gold);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.discipline__sign::before {
+  width: 100%;
+  height: 1px;
+}
+
+.discipline__sign::after {
+  width: 1px;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.discipline__head[aria-expanded='true'] .discipline__sign {
+  transform: rotate(90deg);
+}
+
+.discipline__head[aria-expanded='true'] .discipline__sign::after {
+  opacity: 0;
+}
+
+/* The 0fr -> 1fr grid row is what makes this animate to the panel's own
+   height without measuring it in JavaScript. */
+.discipline__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-out);
+}
+
+.discipline__panel[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+.discipline__panel > div {
+  overflow: hidden;
+}
+
+.discipline__body {
+  padding-bottom: 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.discipline__body p {
+  color: var(--stone);
+  font-size: 0.99rem;
+}
+
+.discipline__body ul {
+  list-style: none;
+  display: grid;
+  gap: 9px;
+  align-content: start;
+  font-size: 0.94rem;
+  color: var(--stone);
+}
+
+.discipline__body li {
+  padding-left: 18px;
+  position: relative;
+}
+
+.discipline__body li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 7px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.discipline__figure {
+  height: 210px;
+}
+
+@media (max-width: 860px) {
+  .discipline__body {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .discipline__figure {
+    height: 200px;
+  }
+}

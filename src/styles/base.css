@@ -1,0 +1,146 @@
+/* ============================================================
+   Base — reset, document typography and the primitives that more
+   than one section relies on (.shell, .band, .lede).
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--step-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* NOT overflow-x:hidden on body. Per spec, once one axis is not
+   `visible` the other computes to `auto`, which turns body into its own
+   scroll container — and both ScrollSmoother and ScrollTrigger then lose
+   track of where scrolling actually happens, so no trigger ever fires.
+   `clip` does the same visual job without creating a scroll container.
+   The wide dawn arc is already clipped by .hero. */
+#smooth-content {
+  padding-top: var(--masthead-h);
+  overflow-x: clip;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+svg {
+  display: block;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+h1,
+h2,
+h3,
+.serif {
+  font-family: var(--serif);
+  font-weight: 450;
+  letter-spacing: -0.022em;
+  line-height: 1.08;
+  font-variation-settings: 'opsz' 96, 'SOFT' 0, 'WONK' 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* keyword emphasis inside a headline — used on some titles, not all */
+.hl {
+  color: var(--accent-text);
+}
+
+/* ---------- layout primitives ---------- */
+.shell {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.band {
+  padding-block: clamp(72px, 9vw, 124px);
+}
+
+.band--ink {
+  background: var(--ink);
+  color: var(--paper);
+  --accent-text: var(--gold);
+}
+
+.band--ink p {
+  color: var(--stone-on-ink);
+}
+
+.lede {
+  color: var(--stone);
+  font-size: 1.08rem;
+  max-width: 56ch;
+}
+
+.band--ink .lede {
+  color: var(--stone-on-ink);
+}
+
+.section-head {
+  margin-bottom: clamp(36px, 4.5vw, 60px);
+}
+
+.section-head h2 {
+  font-size: var(--step-h2);
+  max-width: 19ch;
+}
+
+.section-head .lede {
+  margin-top: 16px;
+}
+
+/* ---------- accessibility ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}

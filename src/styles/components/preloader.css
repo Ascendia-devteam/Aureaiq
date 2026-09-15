@@ -1,0 +1,68 @@
+/* ============================================================
+   Preloader ("overture").
+
+   This is the one screen that covers everything, so nothing about it
+   may depend on GSAP: it is driven by plain React state, exits on a CSS
+   transition, and has a keyframe failsafe underneath in case the
+   component never reaches its release path at all.
+   ============================================================ */
+.overture {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--ink);
+  color: var(--paper);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 22px;
+  transition: transform 0.9s var(--ease-curtain);
+  animation: overture-failsafe 0.5s ease 9s forwards;
+}
+
+.overture.is-out {
+  transform: translateY(-100%);
+}
+
+@keyframes overture-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.overture__mark {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  letter-spacing: 0.22em;
+  line-height: 1;
+}
+
+.overture__mark span {
+  color: var(--gold);
+}
+
+.overture__bar {
+  width: min(210px, 44vw);
+  height: 1px;
+  background: rgb(250 247 240 / 0.16);
+  overflow: hidden;
+}
+
+.overture__fill {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.overture__pct {
+  font-family: var(--sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: rgb(250 247 240 / 0.45);
+  font-variant-numeric: tabular-nums;
+}

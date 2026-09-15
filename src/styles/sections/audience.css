@@ -1,0 +1,59 @@
+/* ============================================================
+   Audience — the image supports a list that says something, instead of
+   running full-bleed on its own.
+   ============================================================ */
+.audience__inner {
+  display: grid;
+  grid-template-columns: 0.72fr 1fr;
+  gap: clamp(34px, 5vw, 72px);
+  align-items: start;
+}
+
+.audience__figure {
+  height: clamp(400px, 48vw, 560px);
+}
+
+@media (max-width: 860px) {
+  .audience__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .audience__figure {
+    height: 240px;
+    order: 2;
+    margin-top: 36px;
+  }
+}
+
+.sector {
+  display: grid;
+  grid-template-columns: 11ch 1fr;
+  gap: 8px 28px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-top: 1px solid var(--rule-on-paper);
+}
+
+.sector:last-child {
+  border-bottom: 1px solid var(--rule-on-paper);
+}
+
+.sector dt {
+  font-family: var(--serif);
+  font-size: 1.16rem;
+  letter-spacing: -0.015em;
+}
+
+.sector dd {
+  color: var(--stone);
+  font-size: 0.96rem;
+  max-width: 46ch;
+}
+
+@media (max-width: 600px) {
+  .sector {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding: 18px 0;
+  }
+}

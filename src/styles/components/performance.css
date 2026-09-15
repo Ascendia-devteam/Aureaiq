@@ -1,0 +1,33 @@
+/* ============================================================
+   Lite mode.
+
+   Entered when the device reports low capability, or when the frame
+   rate actually drops (see usePerformanceTier). Removes the
+   compositing-heavy work and leaves the layout and type untouched.
+
+   The `lite` and `no-motion` classes are set on <html> by
+   MotionProvider, so any stylesheet can opt out of expensive work.
+   ============================================================ */
+html.lite .fig::after {
+  display: none;
+}
+
+html.lite .fig {
+  isolation: auto;
+  box-shadow:
+    0 1px 3px rgb(21 20 15 / 0.1),
+    0 10px 20px -16px rgb(21 20 15 / 0.3);
+}
+
+html.lite .cursor {
+  display: none;
+}
+
+html.lite .hero__kicker::before {
+  animation: none;
+}
+
+html.lite .cta,
+html.lite .cta:hover {
+  box-shadow: 0 1px 2px rgb(21 20 15 / 0.14);
+}

@@ -1,0 +1,35 @@
+/* ============================================================
+   Quote (Ink)
+   ============================================================ */
+.quote-band {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(60px, 6vw, 88px);
+}
+
+.quote {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+/* The measure lives on the blockquote so `ch` resolves against the
+   display size, not the inherited body size. */
+.quote blockquote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3.1vw, 2.35rem);
+  line-height: 1.26;
+  letter-spacing: -0.015em;
+  max-width: 30ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.quote figcaption {
+  margin-top: 24px;
+  font-size: var(--step-small);
+  color: var(--stone-on-ink);
+  letter-spacing: 0.02em;
+}

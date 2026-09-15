@@ -1,0 +1,33 @@
+/* ============================================================
+   Footer
+   ============================================================ */
+.colophon {
+  background: var(--ink);
+  color: var(--paper);
+  padding-block: 52px;
+}
+
+.colophon__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px 40px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.colophon__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+  font-size: 0.9rem;
+  color: var(--stone-on-ink);
+}
+
+.colophon__links a:hover {
+  color: var(--paper);
+}
+
+.colophon__meta {
+  font-size: var(--step-small);
+  color: var(--stone-on-ink);
+}

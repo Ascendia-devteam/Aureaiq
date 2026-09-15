@@ -1,0 +1,206 @@
+/* ============================================================
+   Masthead — fixed, outside the smoothed content.
+
+   Colours are driven by three custom properties so the whole bar can
+   invert when it passes over an Ink section.
+   ============================================================ */
+.masthead {
+  --head-fg: var(--ink);
+  --head-bg: #faf7f0;
+  --head-solid: var(--paper);
+  --head-rule: var(--rule-on-paper);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  color: var(--head-fg);
+  background: var(--head-bg);
+  border-bottom: 1px solid var(--head-rule);
+  transition:
+    background 0.55s ease,
+    color 0.55s ease,
+    border-color 0.55s ease;
+  will-change: transform;
+}
+
+.masthead.is-inverted {
+  --head-fg: var(--paper);
+  --head-bg: #15140f;
+  --head-solid: var(--ink);
+  --head-rule: var(--rule-on-ink);
+}
+
+.masthead__inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding-block: 18px;
+  transition: padding-block 0.45s var(--ease-out);
+}
+
+.masthead.is-condensed .masthead__inner {
+  padding-block: 11px;
+}
+
+.masthead__progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+  width: 100%;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ---------- wordmark ---------- */
+.wordmark {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  font-family: var(--serif);
+  font-size: 1.24rem;
+  letter-spacing: 0.09em;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.wordmark__dot {
+  color: var(--gold);
+}
+
+/* Endorsement line. Sans, uppercase and tracked out so it reads as a
+   footnote to the wordmark, not a second wordmark. Tracking is tuned so
+   the line lands at roughly the width of AUREA above it. */
+.wordmark__by {
+  font-family: var(--sans);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  line-height: 1;
+  opacity: 0.62;
+}
+
+/* ---------- nav links: the label rolls up, a copy rolls in behind ---------- */
+.menu {
+  display: flex;
+  gap: 32px;
+  margin-left: auto;
+  font-size: 0.925rem;
+}
+
+.menu > a {
+  position: relative;
+  padding-block: 6px;
+  color: var(--head-fg);
+}
+
+.roll {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Both halves must be block — transforms do not apply to inline boxes,
+   which left the top label frozen while its twin slid in over it. */
+.roll__a,
+.roll__b {
+  display: block;
+  white-space: nowrap;
+}
+
+.roll__b {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+
+.menu > a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease-out);
+}
+
+.menu > a[aria-current='true']::after {
+  transform: scaleX(1);
+}
+
+/* ---------- inline "Book" button ---------- */
+.book {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid currentColor;
+  padding: 9px 19px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--head-fg);
+}
+
+.book::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.45s var(--ease-out);
+}
+
+.book span {
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease 0.05s;
+}
+
+.book:hover::before {
+  transform: scaleY(1);
+}
+
+.book:hover span {
+  color: var(--head-solid);
+}
+
+/* ---------- burger ---------- */
+.burger {
+  display: none;
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  color: var(--head-fg);
+}
+
+.burger > * {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+  grid-area: 1 / 1;
+}
+
+.burger > *:last-child {
+  opacity: 0;
+}
+
+@media (max-width: 880px) {
+  .menu,
+  .masthead .book {
+    display: none;
+  }
+
+  .burger {
+    display: grid;
+  }
+}

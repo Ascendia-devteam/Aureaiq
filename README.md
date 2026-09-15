@@ -209,6 +209,78 @@ mount ──► MotionProvider picks a tier from device capability
 
 ---
 
+## Deploying to Hostinger
+
+The build is plain static files, so **nothing runs Node on the server**.
+`npm run build` produces `dist/`, and `dist/` is the whole site.
+
+### One-time setup
+
+**1. Add your SSH key to Hostinger.** In hPanel → Advanced → SSH Access →
+Manage SSH keys, paste the contents of `~/.ssh/id_ed25519.pub`. Without
+this, every deploy asks for the account password.
+
+Check it worked:
+
+```bash
+ssh -p <port> <user>@<host> 'echo ok'
+```
+
+**2. Find the document root.** hPanel shows a directory, but on Hostinger
+the web server usually serves a `public_html` *inside* it. Confirm before
+the first deploy:
+
+```bash
+ssh -p <port> <user>@<host> 'ls -la <the directory hPanel showed you>'
+```
+
+If you see `public_html`, that is the document root. If you see
+`index.html` or `.htaccess` sitting directly there, the directory itself
+is the root.
+
+**3. Fill in the connection details.**
+
+```bash
+cp .env.deploy.example .env.deploy   # then edit it
+```
+
+`.env.deploy` is gitignored — server addresses stay out of the repo.
+
+### Deploying
+
+```bash
+npm run deploy
+```
+
+It builds, shows a dry run of exactly what would change on the server,
+and waits for confirmation before touching anything. `npm run deploy --
+--yes` skips the prompt.
+
+The upload uses `rsync --delete`, so the server ends up an exact mirror
+of `dist/` — stale fingerprinted assets from old builds are cleaned up
+rather than accumulating forever. That also means **`DEPLOY_PATH` must be
+the document root and nothing else**; the script refuses paths that
+obviously are not one, but it cannot check what it cannot see.
+
+### What ships with the build
+
+`public/.htaccess` is copied into `dist/` on every build. It sets
+compression, long cache lifetimes for the fingerprinted files in
+`/assets`, and `no-cache` on `index.html` so a deploy is visible
+immediately to returning visitors.
+
+Force HTTPS from hPanel's own SSL toggle rather than with a rewrite rule
+here — behind Hostinger's proxy an `.htaccess` redirect can loop.
+
+### Before the first public deploy
+
+The site still carries placeholder content: the phone number, the three
+social links, and every photograph (see the `PLACEHOLDER` markers in
+`src/content/`). The enquiry form has no backend and only acknowledges
+the visitor.
+
+---
+
 ## Known gaps
 
 - **The enquiry form has no backend.** It acknowledges the visitor and

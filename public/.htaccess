@@ -1,0 +1,57 @@
+# ============================================================
+# Static hosting rules for Apache / LiteSpeed (Hostinger).
+#
+# This file lives in public/, so Vite copies it to dist/ on every
+# build and it ships with the site.
+#
+# Note: the site navigates with #hash anchors only — there is no
+# client-side router — so no SPA rewrite is needed. If a real router is
+# ever added, uncomment the fallback block at the bottom.
+# ============================================================
+
+# ---------- compression ----------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ---------- caching ----------
+# Vite fingerprints everything it emits into /assets (index-CwZI3eOJ.js),
+# so those files can be cached forever: a new build produces a new name.
+#
+# Careful: this matches by extension. Any UNFINGERPRINTED .js or .css you
+# drop into public/ would also be cached for a year. Put such files in a
+# folder and add an exception, or fingerprint them yourself.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|mjs|css|woff2?|png|jpe?g|gif|svg|webp|avif|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # index.html must never be cached, or a deploy stays invisible to
+  # anyone who has already visited.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ---------- correct types for fonts and modern images ----------
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/avif .avif
+  AddType image/webp .webp
+</IfModule>
+
+# ---------- directory listing off ----------
+Options -Indexes
+
+# ---------- SPA fallback (not needed today) ----------
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{REQUEST_FILENAME} !-f
+#   RewriteCond %{REQUEST_FILENAME} !-d
+#   RewriteRule . /index.html [L]
+# </IfModule>

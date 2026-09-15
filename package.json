@@ -3,13 +3,14 @@
   "private": true,
   "version": "5.0.0",
   "type": "module",
-  "description": "Aurea Professional Services — marketing site.",
+  "description": "Aurea Professional Services \u2014 marketing site.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -b --noEmit",
+    "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
